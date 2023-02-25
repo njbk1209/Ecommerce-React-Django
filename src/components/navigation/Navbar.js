@@ -1,88 +1,91 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import Alert from '../../components/alert'
-import { Navigate } from 'react-router'
 import {
-    BookmarkAltIcon,
-    BriefcaseIcon,
     ChartBarIcon,
     CheckCircleIcon,
     CursorClickIcon,
-    DesktopComputerIcon,
-    GlobeAltIcon,
-    InformationCircleIcon,
     MenuIcon,
-    NewspaperIcon,
-    OfficeBuildingIcon,
     PhoneIcon,
     PlayIcon,
     ShieldCheckIcon,
-    UserGroupIcon,
     ViewGridIcon,
     XIcon,
+    WrenchIcon,
+    GiftIcon,
+    QuestionMarkCircleIcon
 } from '@heroicons/react/outline'
-import { ChevronDownIcon } from '@heroicons/react/solid'
+import { ChevronDownIcon, HomeIcon, OfficeBuildingIcon, ShoppingBagIcon, ShoppingCartIcon, UserGroupIcon } from '@heroicons/react/solid'
 import { connect } from 'react-redux'
 import { logout } from '../../redux/actions/auth'
+import { get_categories } from '../../redux/actions/categories'
+
+const Llave = () => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.867 19.125h.008v.008h-.008v-.008z" />
+        </svg>
+    )
+}
+
+const Envios = () => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#ffffff"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zm-.5 1.5l1.96 2.5H17V9.5h2.5zM6 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2.22-3c-.55-.61-1.33-1-2.22-1s-1.67.39-2.22 1H3V6h12v9H8.22zM18 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" /></svg>
+    )
+}
+
+const Efectivo = () => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+        </svg>
+    )
+}
+
+const Sucursales = () => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+        </svg>
+
+    )
+}
 
 const solutions = [
     {
-        name: 'Analytics',
-        description: 'Get Link better understanding of where your traffic is coming from.',
+        name: 'Políticas de garantía',
+        description: 'Términos y condiciones para solicitar garantías de productos.',
         href: '#',
-        icon: ChartBarIcon,
+        icon: Llave,
     },
     {
-        name: 'Engagement',
-        description: 'Speak directly to your customers in Link more meaningful way.',
+        name: 'Políticas de entrega',
+        description: 'Cómo el cliente recibirá la mercancía comprada por tienda on-line.',
         href: '#',
-        icon: CursorClickIcon,
+        icon: Envios,
     },
-    { name: 'Security', description: "Your customers' data will be safe and secure.", href: '#', icon: ShieldCheckIcon },
     {
-        name: 'Integrations',
-        description: "Connect with third-party tools that you're already using.",
+        name: 'Noticias y eventos',
+        description: "Todos los eventos, noticias y sorteos que Multimax Store tiene para ti.",
         href: '#',
-        icon: ViewGridIcon,
+        icon: GiftIcon
+    },
+    {
+        name: 'Preguntas frecuentes',
+        description: "Todo lo relacionado al proceso de compra y servicio PostVenta.",
+        href: '#',
+        icon: QuestionMarkCircleIcon,
     },
 ]
+
 const callsToAction = [
-    { name: 'Watch Demo', href: '#', icon: PlayIcon },
-    { name: 'View All Products', href: '#', icon: CheckCircleIcon },
-    { name: 'Contact Sales', href: '#', icon: PhoneIcon },
+    { name: 'Métodos de pago', href: '#', icon: Efectivo },
+    { name: 'Sucursales', href: '#', icon: Sucursales },
+    { name: 'Contacto vía Whatsapp', href: '#', icon: PhoneIcon },
 ]
-const company = [
-    { name: 'About', href: '#', icon: InformationCircleIcon },
-    { name: 'Customers', href: '#', icon: OfficeBuildingIcon },
-    { name: 'Press', href: '#', icon: NewspaperIcon },
-    { name: 'Careers', href: '#', icon: BriefcaseIcon },
-    { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
-]
-const resources = [
-    { name: 'Community', href: '#', icon: UserGroupIcon },
-    { name: 'Partners', href: '#', icon: GlobeAltIcon },
-    { name: 'Guides', href: '#', icon: BookmarkAltIcon },
-    { name: 'Webinars', href: '#', icon: DesktopComputerIcon },
-]
-const blogPosts = [
-    {
-        id: 1,
-        name: 'Boost your conversion rate',
-        href: '#',
-        preview: 'Eget ullamcorper ac ut vulputate fames nec mattis pellentesque elementum. Viverra tempor id mus.',
-        imageUrl:
-            'https://images.unsplash.com/photo-1558478551-1a378f63328e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2849&q=80',
-    },
-    {
-        id: 2,
-        name: 'How to use search engine optimization to drive traffic to your site',
-        href: '#',
-        preview: 'Eget ullamcorper ac ut vulputate fames nec mattis pellentesque elementum. Viverra tempor id mus.',
-        imageUrl:
-            'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2300&q=80',
-    },
-]
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -92,16 +95,29 @@ const Navbar = ({
     isAuthenticated,
     user,
     logout,
+    get_categories,
+    total_items
 }) => {
 
     const logoutHandler = () => {
         logout()
     }
 
+    useEffect(() => {
+        get_categories()
+    }, [])
+
+    let activeStyle = {
+        fontWeight: "bolder",
+        borderBottom: '1px solid'
+    };
+
+    let activeClassName = "underline";
+
     const authLinks = (
         <Menu as="div" className="relative inline-block text-left">
             <div>
-                <Menu.Button className="inline-flex justify-center w-full rounded-full  text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                <Menu.Button className="inline-flex justify-center w-full rounded-full text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                     <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
                         <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -170,7 +186,7 @@ const Navbar = ({
                                         'block w-full text-left px-4 py-2 text-sm'
                                     )}
                                 >
-                                    Sign out
+                                    Cerrar sesión
                                 </button>
                             )}
                         </Menu.Item>
@@ -183,56 +199,61 @@ const Navbar = ({
 
     const guestLinks = (
         <Fragment>
-            <Link to="/login" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                Sign in
+            <Link to="/login" className="md:text-sm font-medium text-white hover:border-b">
+                Iniciar sesión
             </Link>
             <Link
                 to="/signup"
-                className="ml-8 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                className="ml-4 inline-flex items-center justify-center px-4 py-2 md:px-2 md:py-1 md:w-20 border border-transparent rounded-md shadow-sm md:text-sm font-medium text-white bg-blue-900 hover:bg-white hover:text-blue-600"
             >
-                Sign up
+                Registrar
             </Link>
         </Fragment>
     )
 
     return (
-        <>
-            <Popover className="relative bg-white">
-                <div className="absolute inset-0 shadow z-30 pointer-events-none" aria-hidden="true" />
+        <div className='bg-blue-600'>
+            <Popover className="relative">
+                <div className="absolute inset-0 pointer-events-none" aria-hidden="true" />
                 <div className="relative z-20">
-                    <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-5 sm:px-6 sm:py-4 lg:px-8 md:justify-start md:space-x-10">
-                        <div>
-                            <Link to="/" className="flex">
-                                <span className="sr-only">Workflow</span>
-                                <img
-                                    className="h-8 w-auto sm:h-10"
-                                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                                    alt=""
-                                />
-                            </Link>
-                        </div>
+                    <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-2 sm:px-6 sm:py-4 lg:px-8 md:justify-start md:space-x-10">
+
                         <div className="-mr-2 -my-2 md:hidden">
-                            <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                            <Popover.Button className=" rounded-md p-2 inline-flex items-center justify-center text-white hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                 <span className="sr-only">Open menu</span>
-                                <MenuIcon className="h-6 w-6" aria-hidden="true" />
+                                <MenuIcon className="h-8 w-8" aria-hidden="true" />
                             </Popover.Button>
+                        </div>
+                        <div className="md:hidden">
+                            <Link to='/cart' className="p-2 rounded-md inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                                <ShoppingCartIcon className='h-8 w-8 text-white hover:scale-110 hover:cursor-pointer transition ease-in-out delay-100' />
+                                <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-1.5 text-center">{total_items}</span>
+                            </Link>
                         </div>
                         <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
                             <Popover.Group as="nav" className="flex space-x-10">
+
+                                <NavLink to="/"
+                                    style={({ isActive }) =>
+                                        isActive ? activeStyle : undefined
+                                    }
+                                    className="md:pt-1 lg:pt-0 md:text-sm lg:text-base font-medium text-white hover:border-b">
+                                    <HomeIcon className='mb-1 mr-1 w-5 h-5 inline' />Inicio
+                                </NavLink>
                                 <Popover>
                                     {({ open }) => (
                                         <>
                                             <Popover.Button
                                                 className={classNames(
-                                                    open ? 'text-gray-900' : 'text-gray-500',
-                                                    'group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                                                    open ? 'text-white' : 'text-white',
+                                                    'group inline-flex items-center md:text-sm lg:text-base font-medium focus:outline-none focus:ring-white focus:text-white hover:border-b'
                                                 )}
                                             >
-                                                <span>Solutions</span>
+                                                <span>Terminos y condiciones</span>
                                                 <ChevronDownIcon
                                                     className={classNames(
-                                                        open ? 'text-gray-600' : 'text-gray-400',
-                                                        'ml-2 h-5 w-5 group-hover:text-gray-500'
+                                                        open ? 'text-white' : 'text-white',
+                                                        'ml-2 h-5 w-5 group-hover:text-white'
                                                     )}
                                                     aria-hidden="true"
                                                 />
@@ -253,11 +274,11 @@ const Navbar = ({
                                                             <Link
                                                                 key={item.name}
                                                                 to={item.href}
-                                                                className="-m-3 p-3 flex flex-col justify-between rounded-lg hover:bg-gray-50"
+                                                                className="-m-3 p-3 flex flex-col justify-between rounded-lg hover:bg-gray-100"
                                                             >
                                                                 <div className="flex md:h-full lg:flex-col">
                                                                     <div className="flex-shrink-0">
-                                                                        <span className="inline-flex items-center justify-center h-10 w-10 rounded-md bg-indigo-500 text-white sm:h-12 sm:w-12">
+                                                                        <span className="inline-flex items-center justify-center h-10 w-10 rounded-md bg-blue-600 text-white sm:h-12 sm:w-12">
                                                                             <item.icon className="h-6 w-6" aria-hidden="true" />
                                                                         </span>
                                                                     </div>
@@ -266,23 +287,23 @@ const Navbar = ({
                                                                             <p className="text-base font-medium text-gray-900">{item.name}</p>
                                                                             <p className="mt-1 text-sm text-gray-500">{item.description}</p>
                                                                         </div>
-                                                                        <p className="mt-2 text-sm font-medium text-indigo-600 lg:mt-4">
-                                                                            Learn more <span aria-hidden="true">&rarr;</span>
+                                                                        <p className="mt-2 text-sm font-medium text-blue-600 lg:mt-4">
+                                                                            Ver más <span aria-hidden="true">&rarr;</span>
                                                                         </p>
                                                                     </div>
                                                                 </div>
                                                             </Link>
                                                         ))}
                                                     </div>
-                                                    <div className="bg-gray-50">
+                                                    <div className="bg-blue-600">
                                                         <div className="max-w-7xl mx-auto space-y-6 px-4 py-5 sm:flex sm:space-y-0 sm:space-x-10 sm:px-6 lg:px-8">
                                                             {callsToAction.map((item) => (
                                                                 <div key={item.name} className="flow-root">
                                                                     <Link
                                                                         to={item.href}
-                                                                        className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-100"
+                                                                        className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-white hover:bg-white hover:text-blue-600"
                                                                     >
-                                                                        <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" />
+                                                                        <item.icon className="flex-shrink-0 h-6 w-6" aria-hidden="true" />
                                                                         <span className="ml-3">{item.name}</span>
                                                                     </Link>
                                                                 </div>
@@ -294,121 +315,31 @@ const Navbar = ({
                                         </>
                                     )}
                                 </Popover>
-                                <Link to="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                                    Pricing
-                                </Link>
-                                <Link to="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                                    Docs
-                                </Link>
-                                <Popover>
-                                    {({ open }) => (
-                                        <>
-                                            <Popover.Button
-                                                className={classNames(
-                                                    open ? 'text-gray-900' : 'text-gray-500',
-                                                    'group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                                                )}
-                                            >
-                                                <span>More</span>
-                                                <ChevronDownIcon
-                                                    className={classNames(
-                                                        open ? 'text-gray-600' : 'text-gray-400',
-                                                        'ml-2 h-5 w-5 group-hover:text-gray-500'
-                                                    )}
-                                                    aria-hidden="true"
-                                                />
-                                            </Popover.Button>
-
-                                            <Transition
-                                                as={Fragment}
-                                                enter="transition ease-out duration-200"
-                                                enterFrom="opacity-0 -translate-y-1"
-                                                enterTo="opacity-100 translate-y-0"
-                                                leave="transition ease-in duration-150"
-                                                leaveFrom="opacity-100 translate-y-0"
-                                                leaveTo="opacity-0 -translate-y-1"
-                                            >
-                                                <Popover.Panel className="hidden md:block absolute z-10 top-full inset-x-0 transform shadow-lg">
-                                                    <div className="absolute inset-0 flex">
-                                                        <div className="bg-white w-1/2" />
-                                                        <div className="bg-gray-50 w-1/2" />
-                                                    </div>
-                                                    <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-                                                        <nav className="grid gap-y-10 px-4 py-8 bg-white sm:grid-cols-2 sm:gap-x-8 sm:py-12 sm:px-6 lg:px-8 xl:pr-12">
-                                                            <div>
-                                                                <h3 className="text-sm font-medium tracking-wide text-gray-500 uppercase">Company</h3>
-                                                                <ul role="list" className="mt-5 space-y-6">
-                                                                    {company.map((item) => (
-                                                                        <li key={item.name} className="flow-root">
-                                                                            <Link
-                                                                                to={item.href}
-                                                                                className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-50"
-                                                                            >
-                                                                                <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" />
-                                                                                <span className="ml-4">{item.name}</span>
-                                                                            </Link>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </div>
-                                                            <div>
-                                                                <h3 className="text-sm font-medium tracking-wide text-gray-500 uppercase">Resources</h3>
-                                                                <ul role="list" className="mt-5 space-y-6">
-                                                                    {resources.map((item) => (
-                                                                        <li key={item.name} className="flow-root">
-                                                                            <Link
-                                                                                to={item.href}
-                                                                                className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-50"
-                                                                            >
-                                                                                <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" />
-                                                                                <span className="ml-4">{item.name}</span>
-                                                                            </Link>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </div>
-                                                        </nav>
-                                                        <div className="bg-gray-50 px-4 py-8 sm:py-12 sm:px-6 lg:px-8 xl:pl-12">
-                                                            <div>
-                                                                <h3 className="text-sm font-medium tracking-wide text-gray-500 uppercase">
-                                                                    From the blog
-                                                                </h3>
-                                                                <ul role="list" className="mt-6 space-y-6">
-                                                                    {blogPosts.map((post) => (
-                                                                        <li key={post.id} className="flow-root">
-                                                                            <Link to={post.href} className="-m-3 p-3 flex rounded-lg hover:bg-gray-100">
-                                                                                <div className="hidden sm:block flex-shrink-0">
-                                                                                    <img className="w-32 h-20 object-cover rounded-md" src={post.imageUrl} alt="" />
-                                                                                </div>
-                                                                                <div className="w-0 flex-1 sm:ml-8">
-                                                                                    <h4 className="text-base font-medium text-gray-900 truncate">{post.name}</h4>
-                                                                                    <p className="mt-1 text-sm text-gray-500">{post.preview}</p>
-                                                                                </div>
-                                                                            </Link>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            </div>
-                                                            <div className="mt-6 text-sm font-medium">
-                                                                <Link to="#" className="text-indigo-600 hover:text-indigo-500">
-                                                                    {' '}
-                                                                    View all posts <span aria-hidden="true">&rarr;</span>
-                                                                </Link>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </Popover.Panel>
-                                            </Transition>
-                                        </>
-                                    )}
-                                </Popover>
+                                <NavLink to="/shop/s"
+                                    style={({ isActive }) =>
+                                        isActive ? activeStyle : undefined
+                                    }
+                                    className="md:pt-1 lg:pt-0 md:text-sm lg:text-base font-medium text-white hover:border-b">
+                                    <ShoppingBagIcon className='mb-1 mr-1 w-5 h-5 inline' /> Tienda
+                                </NavLink>
+                                <NavLink to="/nosotros"
+                                    style={({ isActive }) =>
+                                        isActive ? activeStyle : undefined
+                                    }
+                                    className="md:pt-1 lg:pt-0 md:text-sm lg:text-base font-medium text-white hover:border-b">
+                                    <OfficeBuildingIcon className='mb-1 mr-1 w-5 h-5 inline' /> Nosotros
+                                </NavLink>
                             </Popover.Group>
                             <div className="flex items-center md:ml-12">
-
-                                {
-                                    isAuthenticated ? authLinks : guestLinks
-                                }
-
+                                <>
+                                    <Link to="/cart">
+                                        <ShoppingCartIcon className='h-8 w-8 text-white mr-6 font-bold hover:scale-105' />
+                                        <span className="text-xs absolute top-1 mt-3 ml-4 bg-red-500 text-white font-semibold rounded-full px-1.5 text-center">{total_items}</span>
+                                    </Link>
+                                    {
+                                        isAuthenticated ? authLinks : guestLinks
+                                    }
+                                </>
                             </div>
                         </div>
                     </div>
@@ -438,6 +369,7 @@ const Navbar = ({
                                         />
                                     </div>
                                     <div className="-mr-2">
+
                                         <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                             <span className="sr-only">Close menu</span>
                                             <XIcon className="h-6 w-6" aria-hidden="true" />
@@ -471,29 +403,53 @@ const Navbar = ({
                             </div>
                             <div className="py-6 px-5">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <Link to="#" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
-                                        Pricing
-                                    </Link>
+                                    <NavLink to="/shop/s"
+                                        style={({ isActive }) =>
+                                            isActive ? activeStyle : undefined
+                                        }
+                                        className="rounded-md text-base font-medium text-white">
+                                        Tienda
+                                    </NavLink>
 
-                                    <Link to="#" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                                    <NavLink to="#"
+                                        style={({ isActive }) =>
+                                            isActive ? activeStyle : undefined
+                                        }
+                                        className="rounded-md text-base font-medium text-white">
                                         Docs
-                                    </Link>
+                                    </NavLink>
 
-                                    <Link to="#" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                                    <NavLink to="#"
+                                        style={({ isActive }) =>
+                                            isActive ? activeStyle : undefined
+                                        }
+                                        className="rounded-md text-base font-medium text-white">
                                         Company
-                                    </Link>
+                                    </NavLink>
 
-                                    <Link to="#" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                                    <NavLink to="#"
+                                        style={({ isActive }) =>
+                                            isActive ? activeStyle : undefined
+                                        }
+                                        className="rounded-md text-base font-medium text-white">
                                         Resources
-                                    </Link>
+                                    </NavLink>
 
-                                    <Link to="#" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                                    <NavLink to="#"
+                                        style={({ isActive }) =>
+                                            isActive ? activeStyle : undefined
+                                        }
+                                        className="rounded-md text-base font-medium text-white">
                                         Blog
-                                    </Link>
+                                    </NavLink>
 
-                                    <Link to="#" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                                    <NavLink to="#"
+                                        style={({ isActive }) =>
+                                            isActive ? activeStyle : undefined
+                                        }
+                                        className="rounded-md text-base font-medium text-white">
                                         Contact Sales
-                                    </Link>
+                                    </NavLink>
                                 </div>
                                 <div className="mt-6">
                                     {
@@ -506,15 +462,18 @@ const Navbar = ({
                 </Transition>
             </Popover>
             <Alert />
-        </>
+        </div>
     )
 }
 
 const mapStateToProps = state => ({
     isAuthenticated: state.Auth.isAuthenticated,
-    user: state.Auth.user
+    user: state.Auth.user,
+    categories: state.Categories.categories,
+    total_items: state.Cart.total_items
 })
 
 export default connect(mapStateToProps, {
     logout,
+    get_categories,
 })(Navbar)

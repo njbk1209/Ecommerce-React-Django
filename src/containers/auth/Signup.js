@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import { signup } from '../../redux/actions/auth'
 import { Link } from 'react-router-dom';
 
+import Logo from '../../staticImage/Logo_Blanco_Multimax.png'
+
 const Signup = ({
   signup
 }) => {
@@ -62,12 +64,12 @@ const Signup = ({
         {formik => (
           <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-              <img
-                className="mx-auto h-12 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+            <img
+                className="mx-auto w-7/12 bg-blue-600 py-2 px-8 rounded-md"
+                src={Logo}
                 alt="Workflow"
               />
-              <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Nuevo usuario</h2>
+              <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">Nuevo usuario</h2>
               <p className="mt-2 text-center text-sm text-gray-600">
                 ¿Ya tienes una cuenta?{' '}
                 <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">

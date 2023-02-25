@@ -9,6 +9,11 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.social.urls')),
 
+    path('api/category/', include('apps.category.urls')),
+    path('api/product/', include('apps.product.urls')),
+    path('api/cart/', include('apps.cart.urls')),
+    path('api/preorders/', include('apps.preorders.urls')),
+
     path('admin/', admin.site.urls),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -1,0 +1,9 @@
+[{"caracteristica": "Tamaño de pantalla 32 pulgadas."}, {"caracteristica": "Resolución HD (1366 X 768)."}, {"caracteristica": "2 Entradas de antena (DTV y Cable)."}, {"caracteristica": "2 Conectores HDMI con ARC."}, {"caracteristica": "Puerto USB 2.0."}]
+
+<button
+                        type="submit"
+                        className="max-w-xs flex-1 bg-blue-300 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
+                        disabled
+                      >
+                        Agregar al carrito
+                      </button>

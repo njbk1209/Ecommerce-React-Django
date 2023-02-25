@@ -7,6 +7,8 @@ import { login } from '../../redux/actions/auth'
 import { Navigate } from 'react-router'
 import { Link } from 'react-router-dom';
 
+import Logo from '../../staticImage/Logo_Blanco_Multimax.png'
+
 const Login = ({
   login,
   loading
@@ -46,13 +48,13 @@ const Login = ({
       >
         {formik => (
           <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md ">
               <img
-                className="mx-auto h-12 w-auto"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                className="mx-auto w-7/12 bg-blue-600 py-2 px-8  rounded-md"
+                src={Logo}
                 alt="Workflow"
               />
-              <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Iniciar sesión</h2>
+              <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">Iniciar sesión</h2>
               <p className="mt-2 text-center text-sm text-gray-600">
                 ¿No estas registrado?{' '}
                 <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
