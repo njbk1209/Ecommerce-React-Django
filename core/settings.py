@@ -5,6 +5,7 @@ from datetime import timedelta
 env = environ.Env()
 environ.Env.read_env()
 
+
 ENVIRONMENT = env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ THIRD_PARTY_APPS=[
     'rest_framework_simplejwt.token_blacklist',
     'ckeditor',
     'ckeditor_uploader',
+    'celery'
 ]
 
 INSTALLED_APPS= DJANGO_APPS + PROJECT_APPS + ECOMMERCE_APPS + THIRD_PARTY_APPS
@@ -84,9 +86,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres:///multimax"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "multimax",
+        "USER": "postgres",
+        "PASSWORD": "27314349",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+        "ATOMIC_REQUESTS": True,
+    }
 }
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
@@ -127,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
@@ -206,3 +215,16 @@ if not DEBUG:
     EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
     EMAIL_PORT = env('EMAIL_PORT')
     EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # URL del broker de mensajes (ejemplo con Redis)
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # URL del backend de resultados (ejemplo con Redis)
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'check_expired_preorders': {
+        'task': 'apps.preorders.tasks.delete_expired_preorders',
+        'schedule': 1.0,  # Ejecutar cada segundo
+    },
+}

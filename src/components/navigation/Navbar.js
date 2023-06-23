@@ -1,25 +1,19 @@
-import { Fragment, useEffect, useState } from 'react'
-import { Menu, Popover, Transition } from '@headlessui/react'
+//React request and another 
+import { Fragment } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import Alert from '../../components/alert'
+
+import { Menu, Popover, Transition } from '@headlessui/react'
 import {
-    ChartBarIcon,
-    CheckCircleIcon,
-    CursorClickIcon,
     MenuIcon,
     PhoneIcon,
-    PlayIcon,
-    ShieldCheckIcon,
-    ViewGridIcon,
     XIcon,
-    WrenchIcon,
     GiftIcon,
     QuestionMarkCircleIcon
 } from '@heroicons/react/outline'
-import { ChevronDownIcon, HomeIcon, OfficeBuildingIcon, ShoppingBagIcon, ShoppingCartIcon, UserGroupIcon } from '@heroicons/react/solid'
+import { ChevronDownIcon, HomeIcon, OfficeBuildingIcon, ShoppingBagIcon, ShoppingCartIcon } from '@heroicons/react/solid'
 import { connect } from 'react-redux'
 import { logout } from '../../redux/actions/auth'
-import { get_categories } from '../../redux/actions/categories'
 
 const Llave = () => {
     return (
@@ -49,7 +43,6 @@ const Sucursales = () => {
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
         </svg>
-
     )
 }
 
@@ -93,9 +86,7 @@ function classNames(...classes) {
 
 const Navbar = ({
     isAuthenticated,
-    user,
     logout,
-    get_categories,
     total_items
 }) => {
 
@@ -103,16 +94,10 @@ const Navbar = ({
         logout()
     }
 
-    useEffect(() => {
-        get_categories()
-    }, [])
-
     let activeStyle = {
         fontWeight: "bolder",
         borderBottom: '1px solid'
     };
-
-    let activeClassName = "underline";
 
     const authLinks = (
         <Menu as="div" className="relative inline-block text-left">
@@ -212,7 +197,7 @@ const Navbar = ({
     )
 
     return (
-        <div className='bg-blue-600'>
+        <>
             <Popover className="relative">
                 <div className="absolute inset-0 pointer-events-none" aria-hidden="true" />
                 <div className="relative z-20">
@@ -315,7 +300,7 @@ const Navbar = ({
                                         </>
                                     )}
                                 </Popover>
-                                <NavLink to="/shop/s"
+                                <NavLink to="/shop"
                                     style={({ isActive }) =>
                                         isActive ? activeStyle : undefined
                                     }
@@ -403,7 +388,7 @@ const Navbar = ({
                             </div>
                             <div className="py-6 px-5">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <NavLink to="/shop/s"
+                                    <NavLink to="/shop"
                                         style={({ isActive }) =>
                                             isActive ? activeStyle : undefined
                                         }
@@ -462,18 +447,15 @@ const Navbar = ({
                 </Transition>
             </Popover>
             <Alert />
-        </div>
+        </>
     )
 }
 
 const mapStateToProps = state => ({
     isAuthenticated: state.Auth.isAuthenticated,
-    user: state.Auth.user,
-    categories: state.Categories.categories,
     total_items: state.Cart.total_items
 })
 
 export default connect(mapStateToProps, {
     logout,
-    get_categories,
 })(Navbar)

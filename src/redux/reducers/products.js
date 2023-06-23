@@ -1,6 +1,7 @@
 import {
     GET_PRODUCTS_SUCCESS,
     GET_PRODUCTS_FAIL,
+    GET_PRODUCTS_DELETE,
     GET_PRODUCTS_BY_ARRIVAL_SUCCESS,
     GET_PRODUCTS_BY_ARRIVAL_FAIL,
     GET_PRODUCTS_BY_SOLD_SUCCESS,
@@ -9,10 +10,12 @@ import {
     GET_PRODUCT_FAIL,
     SEARCH_PRODUCTS_SUCCESS,
     SEARCH_PRODUCTS_FAIL,
+    SEARCH_PRODUCTS_DELETE,
     RELATED_PRODUCTS_SUCCESS,
     RELATED_PRODUCTS_FAIL,
     FILTER_PRODUCTS_SUCCESS,
-    FILTER_PRODUCTS_FAIL
+    FILTER_PRODUCTS_FAIL,
+    FILTER_PRODUCTS_DELETE
 } from '../actions/types';
 
 const initialState = {
@@ -28,7 +31,7 @@ const initialState = {
 export default function Products(state = initialState, action) {
     const { type, payload } = action;
 
-    switch(type) {
+    switch (type) {
         case GET_PRODUCTS_SUCCESS:
             return {
                 ...state,
@@ -38,6 +41,11 @@ export default function Products(state = initialState, action) {
             return {
                 ...state,
                 products: null
+            }
+        case GET_PRODUCTS_DELETE:
+            return {
+                ...state,
+                products: payload
             }
         case GET_PRODUCTS_BY_ARRIVAL_SUCCESS:
             return {
@@ -82,22 +90,34 @@ export default function Products(state = initialState, action) {
         case FILTER_PRODUCTS_SUCCESS:
             return {
                 ...state,
-                filtered_products: payload.filtered_products
+                filtered_products: payload.filtered_products,
+                search_products: null
             }
         case FILTER_PRODUCTS_FAIL:
             return {
                 ...state,
-                filtered_products: null
+                filtered_products: payload,
+            }
+        case FILTER_PRODUCTS_DELETE:
+            return {
+                ...state,
+                filtered_products: null,
             }
         case SEARCH_PRODUCTS_SUCCESS:
             return {
                 ...state,
-                search_products: payload.search_products
+                search_products: payload.search_products,
             }
         case SEARCH_PRODUCTS_FAIL:
             return {
                 ...state,
-                search_products: null
+                search_products: null,
+                filtered_products: null
+            }
+        case SEARCH_PRODUCTS_DELETE:
+            return {
+                ...state,
+                search_products: null,
             }
         default:
             return state

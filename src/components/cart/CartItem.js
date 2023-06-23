@@ -32,9 +32,6 @@ const CartItem = ({
         e.preventDefault()
         const fetchData = async () => {
             try {
-                /*if (item.producto.promo){
-                    setAlert(`Solo se puede vender 1 articulo por persona en promo.`, 'red');
-                } else*/
                 if (item.product.quantity >= item_count) {
                     await update_item(item, item_count);
                     setAlert(`La cantidad del producto ${item.product.name} se actualizó exitosamente`, 'green');
@@ -44,7 +41,7 @@ const CartItem = ({
                 }
                 setRender(!render);
             } catch (err) {
-
+                setAlert(`Ha ocurrido un error inesperado`, 'red');
             }
         };
 

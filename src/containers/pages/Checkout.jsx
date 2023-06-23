@@ -15,10 +15,8 @@ import {
     update_item,
 } from "../../redux/actions/cart";
 import {
-    get_preorder_detail,
-    preorder
+    add_preorder, get_preorder
   } from "../../redux/actions/preorders";
-import { add_preorder_detail } from '../../redux/actions/preorders'
 import { setAlert } from "../../redux/actions/alert";
 import CartItem from '../../components/cart/CartItem';
 import { Link } from 'react-router-dom';
@@ -40,8 +38,8 @@ const Checkout = ({
     remove_item,
     update_item,
     setAlert,
-    add_preorder_detail,
-    get_preorder_detail,
+    add_preorder,
+    get_preorder,
     preorder
 }) => {
 
@@ -52,7 +50,7 @@ const Checkout = ({
         get_items()
         get_total()
         get_item_total()
-        get_preorder_detail()
+        get_preorder()
     }, [render])
 
     const showItems = () => {
@@ -94,7 +92,7 @@ const Checkout = ({
 
         if (preorder && preorder !== null && preorder !== undefined && preorder.length !== 0 ){
             return(
-                <p>Hay una preorden activa, debe pagarla o cancelarla para cargar una nueva preorden.</p>
+                <p>Hay una preorden activa, debe pagarla o eliminarla para cargar una nueva preorden.</p>
             )
         }
 
@@ -138,7 +136,7 @@ const Checkout = ({
                                 endBuyButton={endBuyButton()}
                                 sucursales={sucursales}
                                 tipo_pagos={tipo_pagos}
-                                add_preorder_detail = {add_preorder_detail}
+                                add_preorder = {add_preorder}
                             />
 
                         </section>
@@ -213,6 +211,6 @@ export default connect(mapStateToProps, {
     remove_item,
     update_item,
     setAlert,
-    add_preorder_detail,
-    get_preorder_detail
+    add_preorder,
+    get_preorder
 })(Checkout)

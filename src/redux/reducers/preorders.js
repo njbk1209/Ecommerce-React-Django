@@ -3,14 +3,11 @@ import {
     ADD_PREORDER_FAIL,
     DELETE_PREORDER_SUCCESS,
     DELETE_PREORDER_FAIL,
-   //GET_PREORDER_SUCCESS,
-   //GET_PREORDER_FAIL,
-    GET_PREORDER_DETAIL_SUCCESS,
-    GET_PREORDER_DETAIL_FAIL
+    GET_PREORDER_SUCCESS,
+    GET_PREORDER_FAIL
 } from '../actions/types';
 
 const initialState = {
-    preorders: null,
     preorder: null,
     preorder_id: null
 };
@@ -25,23 +22,21 @@ export default function Preorders(state = initialState, action) {
             return {
                 ...state,
             }
-        case GET_PREORDER_DETAIL_SUCCESS:
+        case GET_PREORDER_SUCCESS:
             return {
                 ...state,
                 preorder: payload.preorder
             }
-        case GET_PREORDER_DETAIL_FAIL:
+        case GET_PREORDER_FAIL:
             return {
                 ...state,
-                preorder: {}
             }
-        case 
+        /*case 
             DELETE_PREORDER_SUCCESS,
             DELETE_PREORDER_FAIL:
             return {
                 ...state,
-                preorder: {}
-            }
+            }*/
         default:
             return state;
     }

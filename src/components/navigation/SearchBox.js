@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { SearchIcon } from '@heroicons/react/solid'
 import { connect } from 'react-redux'
 import { get_categories } from '../../redux/actions/categories'
-import { get_search_products, get_filtered_products } from '../../redux/actions/products';
+import { get_search_products, get_products, filtered_products_delete } from '../../redux/actions/products';
 
 import Logo from '../../staticImage/Logo_Blanco_Multimax.png'
 
@@ -50,9 +50,9 @@ const social = [
 const SearchBox = ({
     get_search_products,
     get_categories,
-    filtered_products,
-    get_filtered_products,
+    get_products,
     categories,
+    filtered_products_delete
 }) => {
 
     // eslint-disable-next-line
@@ -74,23 +74,20 @@ const SearchBox = ({
     const onSubmit = e => {
         e.preventDefault();
         get_search_products(search, category_id);
-        get_filtered_products(null)
-        if (window.location.pathname !== '/shop/s') {
+        get_products(null)
+        filtered_products_delete()
+        if (window.location.pathname !== '/shop') {
             setRender(!render);
         }
     }
 
     if (render) {
-        return <Navigate to='/shop/s' />;
-    }
-
-    if (redirect) {
-        window.location.reload(false)
-        return <Navigate to='/' />;
+        return <Navigate to='/shop' />;
     }
 
     return (
-        <div className='bg-blue-600'>
+
+        <div className='max-w-7xl mx-auto'>
             {/*Este es el Grande*/}
             <form onSubmit={e => onSubmit(e)} className='hidden md:block'>
                 <div className='md:grid md:grid-cols-4 w-11/12 mx-auto py-4 gap-x-8'>
@@ -207,16 +204,17 @@ const SearchBox = ({
                 </div>
             </form>
         </div>
+
     )
 }
 
 const mapStateToProps = state => ({
     categories: state.Categories.categories,
-    filtered_products: state.Products.filtered_products
 })
 
 export default connect(mapStateToProps, {
     get_categories,
     get_search_products,
-    get_filtered_products
+    get_products,
+    filtered_products_delete
 })(SearchBox)

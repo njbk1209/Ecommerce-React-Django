@@ -2,6 +2,7 @@ import axios from 'axios';
 import {
     GET_PRODUCTS_SUCCESS,
     GET_PRODUCTS_FAIL,
+    GET_PRODUCTS_DELETE,
     GET_PRODUCTS_BY_ARRIVAL_SUCCESS,
     GET_PRODUCTS_BY_ARRIVAL_FAIL,
     GET_PRODUCTS_BY_SOLD_SUCCESS,
@@ -10,38 +11,48 @@ import {
     GET_PRODUCT_FAIL,
     SEARCH_PRODUCTS_SUCCESS,
     SEARCH_PRODUCTS_FAIL,
+    SEARCH_PRODUCTS_DELETE,
     RELATED_PRODUCTS_SUCCESS,
     RELATED_PRODUCTS_FAIL,
     FILTER_PRODUCTS_SUCCESS,
     FILTER_PRODUCTS_FAIL,
+    FILTER_PRODUCTS_DELETE
 } from './types';
 
-export const get_products = () => async dispatch => {
+export const get_products = (param) => async dispatch => {
     const config = {
         headers: {
             'Accept': 'application/json'
         }
     };
 
-    try { 
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/get-products`, config);
-    
-        if (res.status === 200) {
-            dispatch({
-                type: GET_PRODUCTS_SUCCESS,
-                payload: res.data
-            });
-        } else {
+    if (param === null) {
+        dispatch({
+            type: GET_PRODUCTS_DELETE,
+            payload:null
+        });
+    } else {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/get-products`, config);
+
+            if (res.status === 200) {
+                dispatch({
+                    type: GET_PRODUCTS_SUCCESS,
+                    payload: res.data
+                });
+            } else {
+                dispatch({
+                    type: GET_PRODUCTS_FAIL
+                });
+            }
+
+        } catch (err) {
             dispatch({
                 type: GET_PRODUCTS_FAIL
             });
         }
-
-    } catch(err){
-        dispatch({
-            type: GET_PRODUCTS_FAIL
-        });
     }
+
 }
 
 export const get_products_by_arrival = () => async dispatch => {
@@ -53,7 +64,7 @@ export const get_products_by_arrival = () => async dispatch => {
 
     try {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/get-products?sortBy=date_created&order=desc&limit=8`, config);
-    
+
         if (res.status === 200) {
             dispatch({
                 type: GET_PRODUCTS_BY_ARRIVAL_SUCCESS,
@@ -64,7 +75,7 @@ export const get_products_by_arrival = () => async dispatch => {
                 type: GET_PRODUCTS_BY_ARRIVAL_FAIL
             });
         }
-    } catch(err) {
+    } catch (err) {
         dispatch({
             type: GET_PRODUCTS_BY_ARRIVAL_FAIL
         });
@@ -107,7 +118,6 @@ export const get_product = (productId) => async dispatch => {
 
     try {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/product/product/${productId}`, config);
-
         if (res.status === 200) {
             dispatch({
                 type: GET_PRODUCT_SUCCESS,
@@ -159,14 +169,12 @@ export const get_filtered_products = (category_id, price_range, sort_by, order) 
             'Content-Type': 'application/json'
         }
     };
-
     const body = JSON.stringify({
         category_id,
         price_range,
         sort_by,
         order
     });
-
     try {
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/by/search`, body, config);
 
@@ -175,9 +183,15 @@ export const get_filtered_products = (category_id, price_range, sort_by, order) 
                 type: FILTER_PRODUCTS_SUCCESS,
                 payload: res.data
             });
-        } else {
+        } else if(res.status === 200 && res.data.error){
             dispatch({
-                type: FILTER_PRODUCTS_FAIL
+                type: FILTER_PRODUCTS_FAIL,
+                payload: []
+            });
+        }else {
+            dispatch({
+                type: FILTER_PRODUCTS_FAIL,
+                payload: null
             });
         }
     } catch (err) {
@@ -185,8 +199,14 @@ export const get_filtered_products = (category_id, price_range, sort_by, order) 
             type: FILTER_PRODUCTS_FAIL
         });
     }
+
 }
 
+export const filtered_products_delete = () => async dispatch => {
+    dispatch({
+        type: FILTER_PRODUCTS_DELETE
+    });
+}
 
 export const get_search_products = (search, category_id) => async dispatch => {
     const config = {
@@ -201,22 +221,30 @@ export const get_search_products = (search, category_id) => async dispatch => {
         category_id
     });
 
-    try {
-        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/search`, body, config);
+    if (search === null) {
+        dispatch({
+            type: SEARCH_PRODUCTS_DELETE,
+        });
+    } else {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/product/search`, body, config);
 
-        if (res.status === 200) {
-            dispatch({
-                type: SEARCH_PRODUCTS_SUCCESS,
-                payload: res.data
-            });
-        } else {
+            if (res.status === 200) {
+                dispatch({
+                    type: SEARCH_PRODUCTS_SUCCESS,
+                    payload: res.data
+                });
+            } else {
+                dispatch({
+                    type: SEARCH_PRODUCTS_FAIL
+                });
+            }
+        } catch (err) {
             dispatch({
                 type: SEARCH_PRODUCTS_FAIL
             });
         }
-    } catch (err) {
-        dispatch({
-            type: SEARCH_PRODUCTS_FAIL
-        });
     }
+
+
 }

@@ -22,10 +22,6 @@ import { HeartIcon, MinusSmIcon, PlusSmIcon } from '@heroicons/react/outline'
 import RelatedProducts from "../../components/shop/RelatedProducts";
 
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 
 const ProductDetail = ({
   get_product,
@@ -37,6 +33,11 @@ const ProductDetail = ({
   get_total,
   get_item_total,
 }) => {
+
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
 
   const [loading, setLoading] = useState(false);
 
@@ -148,8 +149,6 @@ const ProductDetail = ({
               </div>
 
               <div className="mt-6">
-                <h3 className="sr-only">Description</h3>
-
                 <div
                   className="text-base text-gray-700 space-y-6"
                   dangerouslySetInnerHTML={{ __html: product && product.description }}
@@ -157,7 +156,11 @@ const ProductDetail = ({
               </div>
 
               <div className="mt-3">
-                <p className="text-xs text-gray-500">SKU: {product && product.code}</p>
+                <p className="text-sm text-gray-700"><span className="font-medium">MARCA:</span> {product && product.brand}</p>
+              </div>
+
+              <div className="mt-2">
+                <p className="text-sm text-gray-700"><span className="font-medium">SKU:</span> {product && product.code}</p>
               </div>
 
               <div className="mt-5">
@@ -188,7 +191,7 @@ const ProductDetail = ({
                         onClick={addToCart}
                         className="max-w-xs flex-1 bg-blue-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
                       >
-                        {loading?'Cargando...':'Agregar al carrito'}
+                        {loading ? 'Cargando...' : 'Agregar al carrito'}
                       </button>
                     ) : (
                       <span className='text-red-500 py-3 font-bold text-xl'>
@@ -246,10 +249,13 @@ const ProductDetail = ({
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Disclosure.Panel as="div" className="px-12 prose prose-sm ">
+                          <Disclosure.Panel as="div" className="p-6 px-12 pt-0 prose prose-sm ">
                             <ul role="list" className="list-disc">
-                              {product && product.caracteristicas.map(caracteristica => (
-                                <li key={caracteristica.caracteristica} className="pb-1 text-gray-800 text-base">{caracteristica.caracteristica}</li>
+                              {product && product.characteristics && Object.entries(product.characteristics).map(([key, value]) => (
+                                <li key={key} className="pb-2">
+                                  <span className="font-medium">{value.name}: </span>
+                                  {value.value}
+                                </li>
                               ))}
                             </ul>
                           </Disclosure.Panel>

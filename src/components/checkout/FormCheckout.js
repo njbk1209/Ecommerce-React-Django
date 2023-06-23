@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Link } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 
-const FormCheckout = ({ endBuyButton, sucursales, add_preorder_detail, tipo_pagos}) => {
+const FormCheckout = ({ endBuyButton, sucursales, add_preorder, tipo_pagos}) => {
 
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const navigate = useNavigate();
@@ -62,14 +62,14 @@ const FormCheckout = ({ endBuyButton, sucursales, add_preorder_detail, tipo_pago
                         .min(2, 'Debe contener al menos 2 caracter.')
                         .required('Requerido'),
                     city: Yup.string()
-                        .max(25, 'Debe contener 255 caracteres o menos.')
+                        .max(25, 'Debe contener 25 caracteres o menos.')
                         .min(2, 'Debe contener al menos 2 caracter.')
                         .required('Requerido'),
                     telephone_number: Yup.string().matches(phoneRegExp, 'El número de telefono no es valido'),
                     whatsapp_number: Yup.string().matches(phoneRegExp, 'El número de Whatsapp no es valido'),
-                    postal_zip_code: Yup.number().positive().integer()
-                        .lessThan(999999, 'Debe contener 6 caracteres o menos.')
-                        .min(1, 'Debe contener al menos un caracter.')
+                    postal_zip_code: Yup.string()
+                        .max(6, 'Debe contener 6 caracteres o menos.')
+                        .min(2, 'Debe contener al menos 2 caracter.')
                         .required('Requerido.'),
                     shipping_branch: Yup.string()
                         .required('Requerido.'),
@@ -78,10 +78,10 @@ const FormCheckout = ({ endBuyButton, sucursales, add_preorder_detail, tipo_pago
                 })}
 
                 onSubmit={({ identification_types, identification, rif_types, rif, full_name, address_line, state_province_region, city, telephone_number, whatsapp_number, postal_zip_code, shipping_branch, transaction_type }, { setSubmitting }) => {
-                    add_preorder_detail(identification_types, identification, rif_types, rif, full_name, address_line, state_province_region, city, telephone_number, whatsapp_number, postal_zip_code, shipping_branch, transaction_type)
+                    add_preorder(identification_types, identification, rif_types, rif, full_name, address_line, state_province_region, city, telephone_number, whatsapp_number, postal_zip_code, shipping_branch, transaction_type)
                     window.scrollTo(0, 0);
                     //alert(identification_types + identification + rif_types + rif + full_name + address_line + state_province_region + city + telephone_number + whatsapp_number + postal_zip_code + shipping_branch + transaction_type )
-                    navigate(`/payorder/${identification}`);
+                    //navigate(`/payorder/${identification}`);
                 }}
 
             >
@@ -386,8 +386,6 @@ const FormCheckout = ({ endBuyButton, sucursales, add_preorder_detail, tipo_pago
                             </div>
 
                         </div>
-
-
 
                         {endBuyButton}
 

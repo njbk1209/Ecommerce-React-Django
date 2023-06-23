@@ -6,13 +6,11 @@ import {
     DELETE_PREORDER_FAIL,
     GET_PREORDER_SUCCESS,
     GET_PREORDER_FAIL,
-    GET_PREORDER_DETAIL_SUCCESS,
-    GET_PREORDER_DETAIL_FAIL
 } from './types';
 import { setAlert } from './alert';
 
 
-export const delete_preorder = id => async dispatch => {
+export const delete_preorder = () => async dispatch =>  {
     if (localStorage.getItem('access')) {
         const config = {
             headers: {
@@ -22,34 +20,30 @@ export const delete_preorder = id => async dispatch => {
             }
         };
 
-        const body = JSON.stringify({
-            id
-        });
-
         try {
-            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/preorders/deletepreorder`, body, config);
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/preorders/deletepreorder`, config);
 
             if (res.status === 200) {
                 dispatch({
-                    type: GET_PREORDER_DETAIL_SUCCESS,
+                    type: DELETE_PREORDER_SUCCESS,
                     payload: res.data
                 });
                 dispatch(setAlert('La preorden se ha eliminado satisfactoriamente', 'green'));
             } else {
                 dispatch({
-                    type: GET_PREORDER_DETAIL_FAIL
+                    type:  DELETE_PREORDER_FAIL
                 });
                 dispatch(setAlert('Ha ocurrido un error al elimianr la preorden', 'green'));
             }
         } catch (err) {
             dispatch({
-                type: GET_PREORDER_DETAIL_FAIL
+                type: DELETE_PREORDER_FAIL
             });
         }
     }
 }
 
-export const get_preorder_detail = identification => async dispatch => {
+export const get_preorder = () => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
             headers: {
@@ -58,34 +52,34 @@ export const get_preorder_detail = identification => async dispatch => {
             }
         };
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/preorders/getpreorder/${identification}`, config);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/preorders/getpreorder`, config);
 
             if (res.status === 200) {
                 dispatch({
-                    type: GET_PREORDER_DETAIL_SUCCESS,
+                    type: GET_PREORDER_SUCCESS,
                     payload: res.data
                 });
             } else {
                 dispatch({
-                    type: GET_PREORDER_DETAIL_FAIL
+                    type: GET_PREORDER_FAIL
                 });
             }
         } catch (err) {
             dispatch({
-                type: GET_PREORDER_DETAIL_FAIL
+                type: GET_PREORDER_FAIL
             });
         }
     }
 }
 
-export const add_preorder_detail = (identification_types, identification, rif_types, rif, full_name, address_line, city, state_province_region, telephone_number, whatsapp_number, postal_zip_code, transaction_type, shipping_branch) => async dispatch => {
+export const add_preorder = (identification_types, identification, rif_types, rif, full_name, address_line, city, state_province_region, telephone_number, whatsapp_number, postal_zip_code, shipping_branch, transaction_type) => async dispatch => {
     if (localStorage.getItem('access')) {
         
         const config = {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `JWT ${localStorage.getItem('access')}`,
                 'Accept': 'application/json',
+                'Authorization': `JWT ${localStorage.getItem('access')}`,      
             }
         };
 
@@ -101,12 +95,12 @@ export const add_preorder_detail = (identification_types, identification, rif_ty
             telephone_number,
             whatsapp_number,
             postal_zip_code,
-            transaction_type,
-            shipping_branch
+            shipping_branch,
+            transaction_type
         });
 
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/preorders/makepreorder`, body, config);
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/preorders/addpreorder`, body, config);
             if (res.status === 201) {
                 dispatch({
                     type: ADD_PREORDER_SUCCESS,
@@ -117,7 +111,7 @@ export const add_preorder_detail = (identification_types, identification, rif_ty
                     type: ADD_PREORDER_FAIL,
                     payload: res.data
                 });
-                dispatch(setAlert('HOla', 'red'));
+                dispatch(setAlert('Hubo una falla en el pedido', 'red'));
             } else if (res.status === 500) {
                 dispatch({
                     type: ADD_PREORDER_FAIL,

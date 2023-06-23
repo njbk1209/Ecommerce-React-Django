@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import Layout from '../../hocs/Layout'
-import { useParams, Navigate } from 'react-router'
+import { Navigate } from 'react-router'
 import { connect } from 'react-redux';
 import {
-  get_preorder_detail,
+  get_preorder,
   preorder
 } from "../../redux/actions/preorders";
 import {
@@ -16,17 +16,14 @@ import OrderListProducts from "../../components/payment/OrderListProducts";
 
 const Payorder = ({
   isAuthenticated,
-  get_preorder_detail,
+  get_preorder,
   preorder
 }) => {
-
-  const params = useParams()
-  const identification = params.identification
   
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    get_preorder_detail(identification)
+    get_preorder()
   }, [])
 
   if (isAuthenticated === false)
@@ -41,7 +38,6 @@ const Payorder = ({
           >
             <FormPayment
               preorder={preorder}
-              identification={identification}
             />
           </section>
           <section
@@ -64,7 +60,7 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps, {
-  get_preorder_detail
+  get_preorder
 })(Payorder)
 
 

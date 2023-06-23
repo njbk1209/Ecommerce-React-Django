@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import {
-    get_preorder_detail,
+    get_preorder,
     preorder
 } from "../../redux/actions/preorders";
 
@@ -259,5 +259,5 @@ const mapStateToProps = state => ({
   })
   
 export default connect(mapStateToProps, {
-    get_preorder_detail
+    get_preorder
 })(FormPayment)

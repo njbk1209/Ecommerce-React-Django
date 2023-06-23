@@ -29,7 +29,7 @@ function App() {
           <Route path='/' element={<Home/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/checkout' element={<Checkout/>}/>
-          <Route path='/payorder/:identification' element={<Payorder/>}/>
+          <Route path='/payorder' element={<Payorder/>}/>
 
           {/*Authetication*/}
           <Route path='/signup' element={<Signup/>}/>
@@ -38,11 +38,9 @@ function App() {
           <Route path='/reset_password' element={<ResetPassword/>} />
           <Route path='/password/reset/confirm/:uid/:token' element={<ResetPasswordConfirm/>} />
 
-          
-
           {/*Pages */}
           <Route exact path='/product/:productId' element={<ProductDetail/>}/>
-          <Route exact path='/shop/:busqueda' element={<Shop/>}/>
+          <Route exact path='/shop/' element={<Shop/>}/>
         </Routes>
       </Router>
     </Provider>

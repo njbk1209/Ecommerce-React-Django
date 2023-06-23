@@ -4,15 +4,30 @@ import ProductCard from "../components/cart/ProductCard"
 import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
-import { FilterIcon, MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid'
-import { useParams } from 'react-router'
+import { FilterIcon, MinusSmIcon, PlusSmIcon, XCircleIcon } from '@heroicons/react/solid'
 
 //categories and products imports
 import { connect } from 'react-redux'
-import { get_categories } from '../redux/actions/categories'
-import { get_products, get_filtered_products, get_search_products } from '../redux/actions/products'
+import { get_products, get_filtered_products, get_search_products, filtered_products_delete } from '../redux/actions/products'
 import { useEffect } from 'react'
 import { prices } from '../helpers/fixedPrices'
+
+const ErrorComponent = () => {
+    return (
+        <div className=''>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-28 h-28 text-red-600 mx-auto mt-12">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            <h1 className='text-2xl font-medium text-center'>No hay productos que coincidan con tu búsqueda.</h1>
+            <ul className='list-disc text-base py-4 px-8 lg:ml-24'>
+                <li><span className='font-semibold'>Revisa la ortografía</span> de las palabras.</li>
+                <li>Utiliza <span className='font-semibold'>palabras más genéricas</span> o menos palabras.</li>
+                <li>Navega por las categorías para encontrar un producto similar.</li>
+                <li>La categoría que seleccionaste no posee <span className='font-semibold'>productos disponibles.</span></li>
+            </ul>
+        </div>
+    )
+}
 
 
 function classNames(...classes) {
@@ -20,7 +35,6 @@ function classNames(...classes) {
 }
 
 const Shop = ({
-    get_categories,
     categories,
     get_products,
     products,
@@ -28,14 +42,18 @@ const Shop = ({
     searched_products,
     filtered_products,
     get_search_products,
+    filtered_products_delete
 }) => {
 
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [filtered, setFiltered] = useState(false)
 
-
-    const params = useParams()
-    const busqueda = params.busqueda
+    useEffect(() => {
+        if(!filtered){
+            get_products()
+        }
+        window.scrollTo(0, 0)
+    }, [])
 
     const [formData, setFormData] = useState({
         category_id: '0',
@@ -51,51 +69,25 @@ const Shop = ({
         order
     } = formData
 
-    useEffect(() => {
-        get_categories()
-        get_products()
-        get_filtered_products(null)
-
-        window.scrollTo(0, 0)
-    }, [])
-
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value })
 
     const onSubmit = e => {
         e.preventDefault();
+        setFiltered(true)
+        get_search_products(null)
+        get_products(null)
         get_filtered_products(category_id, price_range, sortBy, order);
-        get_search_products(null);
-        setFiltered(true);
+        window.scrollTo(0, 0)
     }
 
     const showProducts = () => {
         let results = []
         let display = []
-
         if (
-            filtered_products &&
-            filtered_products !== null &&
-            filtered_products !== undefined &&
-            filtered
-        ) {
-            filtered_products.map((product, index) => {
-                display.push(
-                    <div key={index}>
-                        <ProductCard id={product.id}
-                            images={`http://127.0.0.1:8000${product.images[0].image}`}
-                            name={product.name}
-                            price={product.price}
-                            compare_price={product.compare_price}
-                        />
-                    </div>
-                );
-            });
-        } else if (searched_products &&
+            searched_products &&
             searched_products !== null &&
             searched_products !== undefined &&
-            searched_products.length !== 0 &&
-            busqueda === 's'&&
-            !filtered
+            searched_products.length !== 0
         ) {
             searched_products.map((product, index) => {
                 display.push(
@@ -110,13 +102,27 @@ const Shop = ({
                 );
             });
         } else if (
-            !searched_products &&
-            !filtered_products &&
+            filtered_products &&
+            filtered_products !== null &&
+            filtered_products !== undefined &&
+            filtered_products.length !== 0
+        ) {
+            filtered_products.map((product, index) => {
+                display.push(
+                    <div key={index}>
+                        <ProductCard id={product.id}
+                            images={`http://127.0.0.1:8000${product.images[0].image}`}
+                            name={product.name}
+                            price={product.price}
+                            compare_price={product.compare_price}
+                        />
+                    </div>
+                );
+            });
+        } else if (
             products &&
             products !== null &&
-            products !== undefined &&
-            !filtered
-        ) {
+            products !== undefined) {
             products.map((product, index) => {
 
                 return display.push(
@@ -125,30 +131,19 @@ const Shop = ({
                             images={`http://127.0.0.1:8000${product.images[0].image}`}
                             name={product.name}
                             price={product.price}
-                            compare_price={product.compare_price} />
+                            compare_price={product.compare_price}
+                        />
                     </div>
                 );
             });
-        } else if (display.length === 0 ) {
-            return (
-                <div className=''>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-28 h-28 text-red-600 mx-auto mt-12">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                    </svg>
-                    <h1 className='text-2xl font-medium text-center'>No hay productos que coincidan con tu búsqueda.</h1>
-                    <ul className='list-disc text-base py-4 px-8 lg:ml-24'>
-                        <li><span className='font-semibold'>Revisa la ortografía</span> de las palabras.</li>
-                        <li>Utiliza <span className='font-semibold'>palabras más genéricas</span> o menos palabras.</li>
-                        <li>Navega por las categorías para encontrar un producto similar.</li>
-                        <li>La categoría que seleccionaste no posee <span className='font-semibold'>productos disponibles.</span></li>
-                    </ul>
-                </div>
-            )
+        } else if(display.length === 0){
+                console.log('no estoy aqui')
+            return (<ErrorComponent />)
         }
 
         for (let i = 0; i <= display.length; i += 4) {
             results.push(
-                <div key={i} className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-4">
+                <div key={i} className="mt-3 px-6 mx-auto grid grid-cols-1 gap-8 sm:grid-cols-2 sm:max-w-xl lg:max-w-7xl lg:grid-cols-4 xl:gap-x-4">
                     {display[i] ? display[i] : <div></div>}
                     {display[i + 1] ? display[i + 1] : <div className=''></div>}
                     {display[i + 2] ? display[i + 2] : <div className=''></div>}
@@ -161,8 +156,8 @@ const Shop = ({
 
     return (
         <Layout>
-            <div className="bg-white">
-                <div>
+            <main className="bg-white">
+                <section className="max-w-7xl mx-auto px-8">
                     {/* Mobile filter dialog */}
                     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
                         <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
@@ -405,12 +400,14 @@ const Shop = ({
                         </Dialog>
                     </Transition.Root>
 
-                    <main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <main className="w-auto mx-auto sm:max-w-4xl lg:max-w-7xl">
                         <div className="relative z-10 flex items-baseline justify-between pt-12 pb-6 border-b border-gray-200">
-                            <h1 className="text-2xl lg:text-4xl font-bold tracking-tight text-gray-900">
-                                {searched_products && searched_products !== null && searched_products !== undefined ? '(' + searched_products.length + ') Resultados' : 'Lista de productos'}
-                            </h1>
-
+                            <div className='flex'>
+                                <h1 className="flex text-2xl lg:text-4xl font-bold text-gray-900">
+                                    {searched_products && searched_products !== null && searched_products !== undefined ? '(' + searched_products.length + ') Resultados' : 'Lista de productos'}
+                                    {searched_products && searched_products !== null && searched_products !== undefined ? <div title="Borrar busqueda"> <XCircleIcon onClick={() => { get_search_products(null); get_products() }} className='h-12 w-12 ml-2 text-sm text-red-500 cursor-pointer' /> </div> : null}
+                                </h1>
+                            </div>
                             <div className="flex items-center">
                                 <button
                                     type="button"
@@ -428,14 +425,25 @@ const Shop = ({
                                 {/* WEB FILTERS*/}
                                 <form onSubmit={e => onSubmit(e)} className="hidden lg:block">
 
-                                    <p className='text-xl font-bold border-b border-gray-200 pt-6 pb-4'>Filtrar por</p>
+                                    <div className='text-xl font-bold border-b border-gray-200 pt-6 pb-4'>
+
+                                        {
+                                            filtered_products &&
+                                            filtered_products !== null &&
+                                            filtered_products !== undefined &&
+                                            filtered_products.length !== []
+                                            ? <div className='grid grid-cols-2 gap-2 content-center'><span className='text-sm'>Filtros aplicados, ({filtered_products.length}) coincidencias</span> <button onClick={() => { setFiltered(!filtered); filtered_products_delete();  get_products() }} className=' rounded border-2 border-red-500 py-1 px-3 text-sm text-red-500 cursor-pointer ' >Borrar</button></div> 
+                                            : 'Filtrar por'
+                                        }
+                                    </div>
+
 
                                     <Disclosure as="div" className="border-b border-gray-200 py-5">
                                         {({ open }) => (
                                             <>
                                                 <h3 className="-my-3 flow-root">
                                                     <Disclosure.Button className="py-3 bg-white w-11/12 mx-auto flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                                                    <span className="font-medium text-gray-900 text-base">Categorías</span>
+                                                        <span className="font-medium text-gray-900 text-base">Categorías</span>
                                                         <span className="ml-6 flex items-center">
                                                             {open ? (
                                                                 <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
@@ -631,14 +639,14 @@ const Shop = ({
 
                                 {/* Product grid */}
                                 <div className="lg:col-span-3">
-                                    {(products || searched_products) && showProducts()}
+                                    {( searched_products || filtered_products || products) && showProducts()}
                                 </div>
                             </div>
 
                         </section>
                     </main>
-                </div>
-            </div>
+                </section>
+            </main>
         </Layout>
     )
 }
@@ -651,8 +659,8 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps, {
-    get_categories,
     get_products,
     get_filtered_products,
-    get_search_products
+    get_search_products,
+    filtered_products_delete
 })(Shop)

@@ -80,7 +80,7 @@ const Cart = ({
             <div className='py-8 text-center'>
               <h1 className="w-full border border-transparent py-3 px-4 text-lg font-medium text-slate-700">
                 <AddCart />
-                Carrito vacio. <Link to='/shop/s' className='underline text-blue-600'>Ir a la tienda</Link>
+                Carrito vacio. <Link to='/shop' className='underline text-blue-600'>Ir a la tienda</Link>
               </h1>
               
             </div>
